@@ -6,7 +6,7 @@ let expireTokens = function() {
     }
   }).forEach(function(user) {
     for (let token of user.services.accessTokens.tokens) {
-      accessToken = new AccessToken(rawToken)
+      accessToken = new LoginLinks.AccessToken(rawToken)
       if (accessToken.isExpired) {
         Meteor.users.update(user._id, {$pull: token})
       }
@@ -17,4 +17,4 @@ let expireTokens = function() {
 
 Meteor.setInterval(function() {
   expireTokens()
-}, 60 * 60 * 1000 // 1 hour
+}, 60 * 60 * 1000) // 1 hour

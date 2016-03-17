@@ -11,9 +11,19 @@ _.extend(LoginLinks, {
 
   connectionLogin (token, cb) {
     Meteor.call('login-links/connectionLogin', token, function (e, userId) {
-      if (!e)
+      if (!e) {
         Meteor.connection.setUserId(userId)
 
+        // cleanup new connection
+        existingHook = Meteor.connection.onReconnect
+        Meteor.connection.onReconnect = function(){
+          if (existingHook)
+            existingHook()
+
+          l('onReconnect', Meteor.userId())
+          Meteor.connection.setUserId(null)
+        }
+      }
       cb(e, userId)
     })
   }

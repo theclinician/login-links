@@ -13,22 +13,32 @@ Package.onUse(function(api) {
            'mongo',
            'check']);
 
-  api.addFiles('login-links.js')
+  api.addFiles('login-links.js');
 
-  api.addFiles(['client/login-links.js'], 'client')
+  api.addFiles(['client/login-links.js'], 'client');
 
-  api.addFiles(['server/login-links.js',
-                'server/accessToken.js',
+  api.addFiles(['server/accessToken.js',
+                'server/login-links.js',
                 'server/clearOldTokens.js',
-                'server/loginHandler.js'], 'server')
+                'server/connectionLogin.js',
+                'server/loginHandler.js'], 'server');
+
+  api.export('LoginLinks');
 });
 
 Package.onTest(function(api) {
-  api.use(['login-links',
+  api.use(['loren:login-links',
            'ecmascript',
            'tinytest',
+           'meteor-base',
            'accounts-password',
            'underscore']);
 
-  api.addFiles('tests/client.js', 'client')
+  api.addFiles('tests/helpers.js');
+
+  api.addFiles('tests/server/helpers.js', 'server');
+
+  api.addFiles(['tests/client/helpers.js',
+                'tests/client/loginHandler.js',
+                'tests/client/connectionLogin.js'], 'client');
 });

@@ -8,7 +8,10 @@ class AccessToken {
   }
 
   get typeConfig() {
-    return LoginLinks._accessTokenTypes[this.type]
+    if (this.type)
+      return LoginLinks._accessTokenTypes[this.type]
+    else
+      return {}
   }
 
   // get isRestricted() {
@@ -24,12 +27,11 @@ class AccessToken {
 
   get expiresAt() {
     let expirationInMilliseconds = this.getExpirationInSeconds() * 1000
-    return this.when + expirationInMilliseconds
+    return this.when.getTime() + expirationInMilliseconds
   }
 
   get isExpired() {
-    let now = new Date()
-    return this.expiresAt > now
+    return this.expiresAt < Date.now()
   }
 
   get expirationReason() {
@@ -43,3 +45,5 @@ class AccessToken {
   }
 
 }
+
+LoginLinks.AccessToken = AccessToken

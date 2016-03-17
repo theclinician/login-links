@@ -1,21 +1,23 @@
-Meteor package for sending links that automatically login the user with OTPs (one-time passwords).
+Meteor package for sending links that automatically log in the user with OTPs (one-time passwords).
 
-1. [Basic usage](#basic-usage)
-  1. [On server](#on-server)
-  1. [Then on client](#then-on-client)
-1. [API](#api)
-  1. [Expiration](#expiration)
-    1. [Global](#global)
-    1. [Types](#types)
-    1. [Per token](#per-token)
-  1. [generateAccessToken](#generateaccesstoken)
-  1. [Logging in](#logging-in)
-    1. [loginWithToken](#loginwithtoken)
-    1. [connectionLogin](#connectionlogin)
-  1. [Hooks](#hooks)
-    1. [onTokenLogin](#ontokenlogin)
-    1. [onConnectionLogin](#ontokenlogin)
-1. [Related packages](#related-packages)
+- [Basic usage](#basic-usage)
+  - [On server](#on-server)
+  - [Then on client](#then-on-client)
+- [API](#api)
+  - [Expiration](#expiration)
+    - [Global](#global)
+    - [Types](#types)
+    - [Per token](#per-token)
+  - [generateAccessToken](#generateaccesstoken)
+  - [Logging in](#logging-in)
+    - [loginWithToken](#loginwithtoken)
+    - [connectionLogin](#connectionlogin)
+  - [Hooks](#hooks)
+    - [onTokenLogin](#ontokenlogin)
+    - [onConnectionLogin](#ontokenlogin)
+- [Related packages](#related-packages)
+- [Package dev](#package-dev)
+  - [Testing](#testing)
 
 
 ## Basic usage
@@ -58,7 +60,7 @@ if (!Meteor.userId()) {
 
 When a login is attempted with a token that is expired, a `'login-links/token-expired'` error will be thrown. The default token expiration is one day. 
 
-You can configure expiration in three ways:
+You can configure expiration in three ways. A value of `0` is not supported.
 
 #### Global
 
@@ -103,11 +105,15 @@ There are two supported types of logging in:
 
 `LoginLinks.loginWithToken(token, cb)` (client)
 
+- `cb` is provided `error`
+
 This is a full login: if it is called before expiration, the login will go through, and a resume token (different from an login-links access token) will be generated for the client. That means the client will continue to be logged in until your app's Accounts `loginExpirationInDays` (see http://docs.meteor.com/#/full/accounts_config).
 
 #### connectionLogin
 
 `LoginLinks.connectionLogin(token, cb)` (client)
+
+- `cb` is provided `error, userId`
 
 This is a temporary, connection-based login:
 - When the connection is broken (eg if you reload the page or call Meteor.disconnect()), the user is no longer logged in.
@@ -130,18 +136,29 @@ When [connectionLogin](#connectionlogin) is used to successfully login a user, t
 
 ## Related packages
 
+- [loren:roles-restricted](https://github.com/lorensr/roles-restricted) - If you want to restrict the permissions that the automatically-logged-in browser has, use this along with [alanning:roles](https://github.com/alanning/meteor-roles).
+
 - [accounts-passwordless](https://github.com/acemtp/meteor-accounts-passwordless/)
+  - full accounts system (creates new user accounts)
   - no timeout on tokens
   - tokens are 4 digits
-  - creates new user accounts
   - only email-based
   - token generation is triggered client-side
   - no `connectionLogin` option
 
-- [pascoual:otp](https://github.com/pascoual/meteor-otp/)
+- [pascoual:otp](https://github.com/pascoual/meteor-otp/) - This is for TOTP (Time-based OTP), like Google Authenticator, usually used as 2FA (two-factor auth).
 
-This is for TOTP (Time-based OTP), like Google Authenticator, usually used as 2FA (two-factor auth).
+- [dburles:two-factor](http://meteorcapture.com/two-factor-authentication/) - Generates 2FA codes
 
-- [dburles:two-factor](http://meteorcapture.com/two-factor-authentication/)
+## Package dev
 
-Generates 2FA codes.
+ES6 without semicolons
+
+### Testing
+
+```bash
+git clone git@github.com:lorensr/login-links.git
+cd login-links
+meteor test-packages ./
+open localhost:3000
+```

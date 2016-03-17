@@ -53,6 +53,38 @@ _.extend(LoginLinks, {
     Meteor.users.update(user._id, update)
 
     return stampedToken.token
-  } // end generateAccessToken
+  }, // end generateAccessToken
 
-} // end _.extend(LoginLinks, ...)
+  _getUserByToken(token) {
+    check(token, String)
+
+    hashedToken = Accounts._hashLoginToken(token)
+
+    fields = {
+      _id: 1,
+      'services.accessTokens.tokens': {
+        $elemMatch: {hashedToken}
+      }
+    }
+
+    user = Meteor.users.findOne({
+      'services.accessTokens.tokens.hashedToken': hashedToken
+    }, fields)
+
+    if (!user)
+      throw new Meteor.Error('login-links/token-not-found')
+
+    accessToken = new LoginLinks.AccessToken(user.services.accessTokens.tokens[0])
+
+    if (accessToken.isExpired)
+      throw new Meteor.Error('login-links/token-expired',
+                             accessToken.expirationReason)
+
+    // if (accessToken.isRestricted())
+    //   Roles._restrictAccess(user, accessToken)
+
+    return user
+  } // end _getUserByToken
+
+
+}) // end _.extend(LoginLinks, ...)
