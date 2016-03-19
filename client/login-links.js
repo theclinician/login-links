@@ -26,7 +26,9 @@ _.extend(LoginLinks, {
       }
       cb(e, userId)
     })
-  }
+  },
+
+  setTypes () {} // server-only
 
 })
 

@@ -36,7 +36,8 @@ Package.onTest(function(api) {
 
   api.addFiles('tests/helpers.js');
 
-  api.addFiles('tests/server/helpers.js', 'server');
+  api.addFiles(['tests/server/helpers.js',
+                'tests/server/accessToken.js'], 'server');
 
   api.addFiles(['tests/client/helpers.js',
                 'tests/client/loginHandler.js',

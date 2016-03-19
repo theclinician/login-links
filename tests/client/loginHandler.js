@@ -37,4 +37,3 @@ Tinytest.addAsync(
     })
   }
 )
-

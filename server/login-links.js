@@ -11,6 +11,10 @@ _.extend(LoginLinks, {
     this._defaultExpirationInSeconds = expiration
   },
 
+  setTypes (types) {
+    this._accessTokenTypes = types
+  }, 
+
   generateAccessToken (user, opts) {
     let stampedToken,
         hashStampedToken,
@@ -85,6 +89,5 @@ _.extend(LoginLinks, {
 
     return user
   } // end _getUserByToken
-
 
 }) // end _.extend(LoginLinks, ...)

@@ -18,6 +18,7 @@ Meteor package for sending links that automatically log in the user with OTPs (o
 - [Related packages](#related-packages)
 - [Package dev](#package-dev)
   - [Testing](#testing)
+- [Credits](#credits)
 
 
 ## Basic usage
@@ -37,7 +38,7 @@ Email.send({
 });
 ```
 
-You could also use the token for all your emails to users, adding it as a query parameter that works on any route:
+You could also use the token for all of your emails to users, adding it as a query parameter that works on any route:
 
 `text: 'Josh Owens just commented on your post: https://myapp.com/anyroute?foo=bar&token=' + token`
 
@@ -72,8 +73,8 @@ LoginLinks.setDefaultExpirationInSeconds(60 * 60); // one hour
 
 ```javascript
 LoginLinks.setTypes({
-  short: 10 * 60, // ten minutes
-  long: 30 * 24 * 60 * 60 // one month
+  short: {expirationInSeconds: 10 * 60}, // ten minutes
+  long: {expirationInSeconds: 30 * 24 * 60 * 60} // one month
 });
 
 LoginLinks.generateAccessToken(user, {type: 'short'});  
@@ -136,7 +137,7 @@ When [connectionLogin](#connectionlogin) is used to successfully login a user, t
 
 ## Related packages
 
-- [loren:roles-restricted](https://github.com/lorensr/roles-restricted) - If you want to restrict the permissions that the automatically-logged-in browser has, use this along with [alanning:roles](https://github.com/alanning/meteor-roles).
+- [loren:roles-restricted](https://github.com/lorensr/roles-restricted) - If you want to restrict the permissions that the automatically-logged-in browser has, use this package along with [alanning:roles](https://github.com/alanning/meteor-roles).
 
 - [accounts-passwordless](https://github.com/acemtp/meteor-accounts-passwordless/)
   - full accounts system (creates new user accounts)
@@ -162,3 +163,9 @@ cd login-links
 meteor test-packages ./
 open localhost:3000
 ```
+
+## Credits
+
+Thanks to Share911 for sponsoring. [share911.com](https://share911.com/) - An emergency response system for your organization.
+
+[Contributors](https://github.com/lorensr/roles-restricted/graphs/contributors)
