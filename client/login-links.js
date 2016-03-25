@@ -10,9 +10,9 @@ _.extend(LoginLinks, {
   },
 
   connectionLogin (token, cb) {
-    Meteor.call('login-links/connectionLogin', token, function (e, userId) {
+    Meteor.call('login-links/connectionLogin', token, function (e, data) {
       if (!e) {
-        Meteor.connection.setUserId(userId)
+        Meteor.connection.setUserId(data.userId)
 
         // cleanup new connection
         existingHook = Meteor.connection.onReconnect
@@ -24,7 +24,7 @@ _.extend(LoginLinks, {
           Meteor.connection.setUserId(null)
         }
       }
-      cb(e, userId)
+      cb(e, data)
     })
   },
 

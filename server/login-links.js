@@ -59,6 +59,18 @@ _.extend(LoginLinks, {
     return stampedToken.token
   }, // end generateAccessToken
 
+  _tokenLoginHooks: [],
+
+  onTokenLogin(hook) {
+    this._tokenLoginHooks.push(hook)
+  },
+
+  _connectionHooks: [],
+
+  onConnectionLogin(hook) {
+    this._connectionHooks.push(hook)
+  },
+
   _getUserByToken(token) {
     check(token, String)
 
@@ -83,9 +95,6 @@ _.extend(LoginLinks, {
     if (accessToken.isExpired)
       throw new Meteor.Error('login-links/token-expired',
                              accessToken.expirationReason)
-
-    // if (accessToken.isRestricted())
-    //   Roles._restrictAccess(user, accessToken)
 
     return user
   } // end _getUserByToken

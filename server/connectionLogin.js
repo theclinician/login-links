@@ -11,7 +11,17 @@ Meteor.methods({
 
     this.setUserId(user._id)
 
-    return user._id
+    let data = AccessToken.getCustomFields(token)
+
+    for (hook in LoginLinks._connectionHooks) {
+      value = hook(token, user)
+      if (typeof value === 'object')
+        _.extend(data, value)
+    }
+
+    data.userId = user._id
+
+    return data
   }
 
 })

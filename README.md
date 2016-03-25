@@ -114,7 +114,7 @@ This is a full login: if it is called before expiration, the login will go throu
 
 `LoginLinks.connectionLogin(token, cb)` (client)
 
-- `cb` is provided `error, userId`
+- `cb` is provided `error, data`. `data` has a `userId` field as well as any custom fields on the `token` stored in the database or fields returned from [onConnectionLogin](#onConnectionLogin)
 
 This is a temporary, connection-based login:
 - When the connection is broken (eg if you reload the page or call Meteor.disconnect()), the user is no longer logged in.
@@ -125,15 +125,15 @@ This is a temporary, connection-based login:
 
 #### onTokenLogin
 
-`LoginLinks.onTokenLogin(function(token){});` (server)
+`LoginLinks.onTokenLogin(function(token, user){});` (server)
 
 When [loginWithToken](#loginwithtoken) is used to successfully login a user, this hook is called before completion. 
 
 #### onConnectionLogin
 
-`LoginLinks.onConnectionLogin(function(token){});` (server)
+`LoginLinks.onConnectionLogin(function(token, user){});` (server)
 
-When [connectionLogin](#connectionlogin) is used to successfully login a user, this hook is called before completion. 
+When [connectionLogin](#connectionlogin) is used to successfully login a user, this hook is called before completion. If you return an object, the object's fields will be added to the `data` object that is passed to the client [connectionLogin](#connectionLogin) callback.
 
 ## Related packages
 

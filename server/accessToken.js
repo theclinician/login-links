@@ -14,11 +14,6 @@ class AccessToken {
       return {}
   }
 
-  // get isRestricted() {
-  //   var typeConfig = this.typeConfig
-  //   return !! (typeConfig.only || typeConfig.except)
-  // }
-
   getExpirationInSeconds() {
     return this.expirationInSeconds ||
       this.typeConfig.expirationInSeconds ||
@@ -44,6 +39,10 @@ class AccessToken {
     return reason
   }
 
+}
+
+AccessToken.getCustomFields = function(token) {
+  _.omit(token, 'when', 'hashedToken')
 }
 
 LoginLinks.AccessToken = AccessToken

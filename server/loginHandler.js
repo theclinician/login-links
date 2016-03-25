@@ -12,5 +12,8 @@ Accounts.registerLoginHandler(function (loginRequest) {
 
   user = LoginLinks._getUserByToken(token)
 
+  for (hook in LoginLinks._tokenLoginHooks)
+    hook(token, user)
+
   return {userId: user._id}
 })
