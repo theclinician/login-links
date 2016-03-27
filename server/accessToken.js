@@ -8,13 +8,16 @@ class AccessToken {
   }
 
   get typeConfig() {
+    let config
+    
     if (this.type)
-      return LoginLinks._accessTokenTypes[this.type]
-    else
-      return {}
+      config = LoginLinks._accessTokenTypes[this.type]
+    
+    return config || {}
   }
 
   getExpirationInSeconds() {
+    // l('getExpirationInSeconds', this.type, LoginLinks._accessTokenTypes, this.typeConfig)
     return this.expirationInSeconds ||
       this.typeConfig.expirationInSeconds ||
       LoginLinks._defaultExpirationInSeconds
@@ -42,7 +45,7 @@ class AccessToken {
 }
 
 AccessToken.getCustomFields = function(token) {
-  _.omit(token, 'when', 'hashedToken')
+  return _.omit(token, 'when', 'hashedToken')
 }
 
 LoginLinks.AccessToken = AccessToken

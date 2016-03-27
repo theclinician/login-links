@@ -1,9 +1,7 @@
 Meteor.methods({
 
   'login-links/connectionLogin': function (token) {
-    var userId
-
-    user = LoginLinks._getUserByToken(token)
+    let {user, savedToken} = LoginLinks._lookupToken(token)
     l('connectionLogin user:', user._id)
 
     if (Meteor.userId() === user._id)
@@ -11,10 +9,10 @@ Meteor.methods({
 
     this.setUserId(user._id)
 
-    let data = AccessToken.getCustomFields(token)
+    let data = LoginLinks.AccessToken.getCustomFields(savedToken)
 
-    for (hook in LoginLinks._connectionHooks) {
-      value = hook(token, user)
+    for (let hook of LoginLinks._connectionHooks) {
+      value = hook(savedToken, user)
       if (typeof value === 'object')
         _.extend(data, value)
     }

@@ -7,15 +7,17 @@ _.extend(LoginLinks, {
 
   _defaultExpirationInSeconds: 24 * 60 * 60, // 1 day
 
-  setDefaultExpirationInSeconds (expiration) {
+  setDefaultExpirationInSeconds(expiration) {
     this._defaultExpirationInSeconds = expiration
   },
 
-  setTypes (types) {
+  _accessTokenTypes: {},
+
+  setTypes(types) {
     this._accessTokenTypes = types
   }, 
 
-  generateAccessToken (user, opts) {
+  generateAccessToken(user, opts) {
     let stampedToken,
         hashStampedToken,
         update
@@ -71,10 +73,10 @@ _.extend(LoginLinks, {
     this._connectionHooks.push(hook)
   },
 
-  _getUserByToken(token) {
+  _lookupToken(token) {
     check(token, String)
 
-    hashedToken = Accounts._hashLoginToken(token)
+    let hashedToken = Accounts._hashLoginToken(token)
 
     fields = {
       _id: 1,
@@ -90,13 +92,14 @@ _.extend(LoginLinks, {
     if (!user)
       throw new Meteor.Error('login-links/token-not-found')
 
-    accessToken = new LoginLinks.AccessToken(user.services.accessTokens.tokens[0])
+    let savedToken = user.services.accessTokens.tokens[0]
+    let accessToken = new LoginLinks.AccessToken(savedToken)
 
     if (accessToken.isExpired)
       throw new Meteor.Error('login-links/token-expired',
                              accessToken.expirationReason)
 
-    return user
-  } // end _getUserByToken
+    return {user, savedToken}
+  } // end _lookupToken
 
 }) // end _.extend(LoginLinks, ...)

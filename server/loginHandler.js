@@ -1,19 +1,13 @@
 Accounts.registerLoginHandler(function (loginRequest) {
-  var token,
-      hashedToken,
-      fields,
-      user,
-      accessToken
-
-  token = loginRequest['login-links/accessToken']
+  let token = loginRequest['login-links/accessToken']
 
   if (!token)
     return undefined // don't handle
 
-  user = LoginLinks._getUserByToken(token)
+  let {user, savedToken} = LoginLinks._lookupToken(token)
 
-  for (hook in LoginLinks._tokenLoginHooks)
-    hook(token, user)
+  for (let hook of LoginLinks._tokenLoginHooks)
+    hook(savedToken, user)
 
   return {userId: user._id}
 })
