@@ -26,13 +26,7 @@ _.extend(LoginLinks, {
     check(opts, Match.Optional(Object))
 
     if ('string' === typeof user) {
-      user = Meteor.users.findOne(
-               {_id: user},
-               {fields: {
-                 'services.accessTokens': 1}})
-      if (!user)
-        throw new Error ("login-links error: user not found")
-
+      user = {_id: user}
     } else if ('object' !== typeof user) {
       throw new Error ("login-links error: invalid user argument")
     }
@@ -43,20 +37,11 @@ _.extend(LoginLinks, {
     if (opts)
       _.extend(hashStampedToken, opts)
 
-    if (user.services.accessTokens)
-      update = {
-        $push: {
-          'services.accessTokens.tokens': hashStampedToken
-        }
+    Meteor.users.update(user._id, {
+      $push: {
+        'services.accessTokens.tokens': hashStampedToken
       }
-    else
-      update = {
-        $set: {
-          'services.accessTokens.tokens': [hashStampedToken]
-        }
-      }
-
-    Meteor.users.update(user._id, update)
+    })
 
     return stampedToken.token
   }, // end generateAccessToken
