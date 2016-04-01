@@ -100,7 +100,7 @@ The token is 43 alphanumeric characters, and only the hashed version is stored i
 
 ### Logging in
 
-There are two supported types of logging in:
+There are two supported types of logging in. When you initiate a login, `Accounts.loggingIn()` is updated.
 
 #### loginWithToken
 

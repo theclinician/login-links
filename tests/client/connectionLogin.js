@@ -10,6 +10,18 @@ Tinytest.addAsync(
 )
 
 Tinytest.addAsync(
+  'login-links: updates Accounts.loggingIn()',
+  function (test, done) {
+    test.isFalse(Accounts.loggingIn())
+    LoginLinks.connectionLogin('a', function (e, data) {
+      test.isFalse(Accounts.loggingIn())
+      done()
+    })
+    test.isTrue(Accounts.loggingIn())
+  }
+)
+
+Tinytest.addAsync(
   "login-links: expired token doesn't work",
   function (test, done) {
     createUserAndExpiringToken(function(targetId, token) {

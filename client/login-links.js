@@ -10,7 +10,10 @@ _.extend(LoginLinks, {
   },
 
   connectionLogin (token, cb) {
+    Accounts._setLoggingIn(true)
+    
     Meteor.call('login-links/connectionLogin', token, function (e, data) {
+      Accounts._setLoggingIn(false)
       if (!e) {
         Meteor.connection.setUserId(data.userId)
 
