@@ -1,4 +1,12 @@
-Meteor package for sending links that automatically log in the user with OTPs (one-time passwords).
+Meteor package for sending links that automatically log in the user.
+
+The main use case is sending an email or sms to your user with a link to your app that contains an OTP (one-time password) that automatically logs them in (so they don't have to enter their username/password or do OAuth):
+
+```
+Josh Owens just commented on your blog post:
+https://my-blog-app.com/post/abc?comment=3?token=A10F51nigkFsShxmvkLnlQ76Kzjh7h9pMuNxpVpO81a
+```
+
 
 - [Basic usage](#basic-usage)
   - [On server](#on-server)
@@ -117,7 +125,7 @@ This is a full login: if it is called before expiration, the login will go throu
 - `cb` is provided `error, data`. `data` has a `userId` field as well as any custom fields on the `token` stored in the database or fields returned from [onConnectionLogin](#onConnectionLogin)
 
 This is a temporary, connection-based login:
-- When the connection is broken (eg if you reload the page or call Meteor.disconnect()), the user is no longer logged in.
+- When the connection is broken (eg if you reload the page or call `Meteor.disconnect()`), the user is no longer logged in.
 - No resume tokens are created.
 - Unlike full login, which is LocalStorage-based and works across tabs, `connectionLogin` is tab-specific - if you open a second tab that doesn't have the token in the URL, you won't be logged in.
 
