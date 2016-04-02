@@ -63,21 +63,20 @@ _.extend(LoginLinks, {
 
     let hashedToken = Accounts._hashLoginToken(token)
 
+    // $elemMatch projection doens't work on nested fields
     fields = {
       _id: 1,
-      'services.accessTokens.tokens': {
-        $elemMatch: {hashedToken}
-      }
+      'services.accessTokens.tokens': 1
     }
 
     user = Meteor.users.findOne({
       'services.accessTokens.tokens.hashedToken': hashedToken
-    }, fields)
+    }, {fields})
 
     if (!user)
       throw new Meteor.Error('login-links/token-not-found')
 
-    let savedToken = user.services.accessTokens.tokens[0]
+    let savedToken = _.findWhere(user.services.accessTokens.tokens, {hashedToken})
     let accessToken = new LoginLinks.AccessToken(savedToken)
 
     if (accessToken.isExpired)

@@ -33,12 +33,13 @@ class AccessToken {
   }
 
   get expirationReason() {
-    let reason = 'This '
+    l(this, new Date(this.expiresAt))
+    let reason = "This access token (type '"
           + this.type
-          + ' access token has a '
+          + "') has a "
           + this.getExpirationInSeconds()
           + '-second expiry, and expired at '
-          + this.expiresAt
+          + new Date(this.expiresAt)
     return reason
   }
 
