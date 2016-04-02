@@ -1,7 +1,22 @@
+let maybeReconnect = function () {
+  let tokenExpiration = localStorage.getItem('login-links/tokenExpiration')
+  if (tokenExpiration) {
+    tokenExpiration = new Date(tokenExpiration)
+    let tokenIsCurrent = tokenExpiration > new Date()
+    if (tokenIsCurrent) {
+      let token = localStorage.getItem('login-links/connectionToken')
+      if (LoginLinks.connectionLoginReconnect)
+        LoginLinks.connectionLoginReconnect(token)
+      else
+        LoginLinks.connectionLogin(token)
+    }
+  }
+}
+
 _.extend(LoginLinks, {
 
   loginWithToken (accessToken, cb) {
-    var loginRequest = {'login-links/accessToken': accessToken}
+    let loginRequest = {'login-links/accessToken': accessToken}
 
     Accounts.callLoginMethod({
       methodArguments: [loginRequest],
@@ -17,21 +32,31 @@ _.extend(LoginLinks, {
       if (!e) {
         Meteor.connection.setUserId(data.userId)
 
-        // cleanup new connection
         existingHook = Meteor.connection.onReconnect
         Meteor.connection.onReconnect = function(){
           if (existingHook)
             existingHook()
 
           l('onReconnect', Meteor.userId())
+          // cleanup new connection
           Meteor.connection.setUserId(null)
-        }
-      }
-      cb(e, data)
-    })
-  },
 
-  setTypes () {} // server-only
+          maybeReconnect()
+        }
+
+        data.hashedToken = 'unused' // prevent constructor error
+        let accessToken = new LoginLinks.AccessToken(data)
+
+        localStorage.setItem('login-links/connectionToken', token)
+        localStorage.setItem('login-links/tokenExpiration', new Date(accessToken.expiresAt))
+      }
+
+      if (cb)
+        cb(e, data)
+    })
+  }
 
 })
+
+maybeReconnect()
 

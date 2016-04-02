@@ -5,18 +5,6 @@ Meteor.users._ensureIndex(
 
 _.extend(LoginLinks, {
 
-  _defaultExpirationInSeconds: 24 * 60 * 60, // 1 day
-
-  setDefaultExpirationInSeconds(expiration) {
-    this._defaultExpirationInSeconds = expiration
-  },
-
-  _accessTokenTypes: {},
-
-  setTypes(types) {
-    this._accessTokenTypes = types
-  }, 
-
   generateAccessToken(user, opts) {
     let stampedToken,
         hashStampedToken,

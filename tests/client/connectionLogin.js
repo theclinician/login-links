@@ -37,6 +37,35 @@ Tinytest.addAsync(
 )
 
 Tinytest.addAsync(
+  "login-links: expired token doesn't reconnect",
+  function (test, done) {
+    createUserAndExpiringToken(function(targetId, token) {
+      LoginLinks.connectionLogin(token, function (e, data) {
+        setTimeout(function(){
+          // after reconnect, should be logged out
+          Meteor.disconnect()
+
+          existingHook = Meteor.connection.onReconnect
+          Meteor.connection.onReconnect = function() {
+            existingHook()
+
+            test.equal(Meteor.userId(), null)
+
+            Meteor.call('whoami', function(e, serverUserId) {
+              test.equal(serverUserId, null)
+              
+              done()
+            })
+          }
+
+          Meteor.reconnect()
+        }, 2000)
+      })
+    })
+  }
+)
+
+Tinytest.addAsync(
   'login-links: connectionLogin works',
   function (test, done) {
     createUserAndToken(function(targetId, token) {
@@ -54,20 +83,24 @@ Tinytest.addAsync(
         Meteor.call('whoami', function(e, serverUserId) {
           test.equal(serverUserId, targetId)
 
-          // after reconnect, should be logged out
+          // after reconnect, should automatically connectionLogin
           Meteor.disconnect()
 
           existingHook = Meteor.connection.onReconnect
           Meteor.connection.onReconnect = function() {
             existingHook()
 
-            test.equal(Meteor.userId(), null)
+            test.isTrue(Accounts.loggingIn())
 
-            Meteor.call('whoami', function(e, serverUserId) {
-              test.equal(serverUserId, null)
-              
-              done()
-            })
+            setTimeout(function(){
+              test.equal(Meteor.userId(), targetId)
+
+              Meteor.call('whoami', function(e, serverUserId) {
+                test.equal(serverUserId, targetId)
+                
+                done()
+              })
+            }, 1000)
           }
 
           Meteor.reconnect()

@@ -13,12 +13,12 @@ Package.onUse(function(api) {
            'mongo',
            'check']);
 
-  api.addFiles('login-links.js');
+  api.addFiles(['common/login-links.js',
+                'common/accessToken.js']);
 
   api.addFiles(['client/login-links.js'], 'client');
 
-  api.addFiles(['server/accessToken.js',
-                'server/login-links.js',
+  api.addFiles(['server/login-links.js',
                 'server/clearOldTokens.js',
                 'server/connectionLogin.js',
                 'server/loginHandler.js'], 'server');

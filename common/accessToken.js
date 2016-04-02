@@ -33,7 +33,6 @@ class AccessToken {
   }
 
   get expirationReason() {
-    l(this, new Date(this.expiresAt))
     let reason = "This access token (type '"
           + this.type
           + "') has a "
@@ -43,10 +42,6 @@ class AccessToken {
     return reason
   }
 
-}
-
-AccessToken.getCustomFields = function(token) {
-  return _.omit(token, 'when', 'hashedToken')
 }
 
 LoginLinks.AccessToken = AccessToken

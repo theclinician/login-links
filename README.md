@@ -77,6 +77,8 @@ You can configure expiration in three ways. A value of `0` is not supported.
 LoginLinks.setDefaultExpirationInSeconds(60 * 60); // one hour
 ```
 
+Call on both server and client
+
 #### Types
 
 ```javascript
@@ -87,6 +89,8 @@ LoginLinks.setTypes({
 
 LoginLinks.generateAccessToken(user, {type: 'short'});  
 ```
+
+Call on both server and client
 
 #### Per token
 
@@ -125,9 +129,20 @@ This is a full login: if it is called before expiration, the login will go throu
 - `cb` is provided `error, data`. `data` has a `userId` field as well as any custom fields on the `token` stored in the database or fields returned from [onConnectionLogin](#onConnectionLogin)
 
 This is a temporary, connection-based login:
-- When the connection is broken (eg if you reload the page or call `Meteor.disconnect()`), the user is no longer logged in.
+- When the connection is broken (eg if you reload the page or call `Meteor.disconnect()`), the user is no longer logged in, unless it's within the expiration window (in which case `connectionLogin` will automatically be called again with the same token)
 - No resume tokens are created.
-- Unlike full login, which is LocalStorage-based and works across tabs, `connectionLogin` is tab-specific - if you open a second tab that doesn't have the token in the URL, you won't be logged in.
+- If `connectionLogin` is successful, it will automatically be called inside other browser tabs that are opened later, provided the token hasn't expired.
+
+The reconnect code uses `Meteor.connection.onReconnect`, so if you redefine it, make sure to save and call the existing hook:
+
+```javascript
+existingHook = Meteor.connection.onReconnect
+Meteor.connection.onReconnect = function() {
+  existingHook()
+
+  // then your code
+};
+``
 
 ### Hooks
 
@@ -142,6 +157,12 @@ When [loginWithToken](#loginwithtoken) is used to successfully login a user, thi
 `LoginLinks.onConnectionLogin(function(token, user){});` (server)
 
 When [connectionLogin](#connectionlogin) is used to successfully login a user, this hook is called before completion. If you return an object, the object's fields will be added to the `data` object that is passed to the client [connectionLogin](#connectionLogin) callback.
+
+#### connectionLoginReconnect
+
+`LoginLinks.connectionLoginReconnect = function(token){};` (client)
+
+On a `connectionLogin` reconnect attempt, by default it will call `connectionLogin` again. If you'd like a different function to be used, assign it to `LoginLinks.connectionLoginReconnect`
 
 ## Related packages
 

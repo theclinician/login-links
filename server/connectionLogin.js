@@ -9,7 +9,7 @@ Meteor.methods({
 
     this.setUserId(user._id)
 
-    let data = LoginLinks.AccessToken.getCustomFields(savedToken)
+    let data = _.omit(savedToken, 'hashedToken')
 
     for (let hook of LoginLinks._connectionHooks) {
       value = hook(savedToken, user)
