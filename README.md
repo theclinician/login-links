@@ -1,4 +1,4 @@
-Meteor package for sending links that automatically log in the user.
+ Meteor package for sending links that automatically log in the user.
 
 The main use case is sending an email or sms to your user with a link to your app that contains an OTP (one-time password) that automatically logs them in (so they don't have to enter their username/password or do OAuth):
 
@@ -7,6 +7,7 @@ Josh Owens just commented on your blog post:
 https://my-blog-app.com/post/abc?comment=3?token=A10F51nigkFsShxmvkLnlQ76Kzjh7h9pMuNxpVpO81a
 ```
 
+## Contents
 
 - [Basic usage](#basic-usage)
   - [On server](#on-server)
