@@ -45,6 +45,11 @@ Tinytest.addAsync(
           // after reconnect, should be logged out
           Meteor.disconnect()
 
+          // re-setup hook because might have been overwritten by
+          // loginWithPassword in previous test
+          Meteor.connection.onReconnect = null
+          LoginLinks._setupHook()
+
           existingHook = Meteor.connection.onReconnect
           Meteor.connection.onReconnect = function() {
             existingHook()
@@ -85,6 +90,11 @@ Tinytest.addAsync(
 
           // after reconnect, should automatically connectionLogin
           Meteor.disconnect()
+
+          // re-setup hook because might have been overwritten by
+          // loginWithPassword in previous test
+          Meteor.connection.onReconnect = null
+          LoginLinks._setupHook()
 
           existingHook = Meteor.connection.onReconnect
           Meteor.connection.onReconnect = function() {

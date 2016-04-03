@@ -1,4 +1,4 @@
-let maybeReconnect = function () {
+let maybeRelogin = function () {
   let tokenExpiration = localStorage.getItem('login-links/tokenExpiration')
   if (tokenExpiration) {
     tokenExpiration = new Date(tokenExpiration)
@@ -15,6 +15,8 @@ let maybeReconnect = function () {
     }
   }
 }
+
+let existingHook
 
 _.extend(LoginLinks, {
 
@@ -35,18 +37,6 @@ _.extend(LoginLinks, {
       if (!e) {
         Meteor.connection.setUserId(data.userId)
 
-        existingHook = Meteor.connection.onReconnect
-        Meteor.connection.onReconnect = function(){
-          if (existingHook)
-            existingHook()
-
-          l('onReconnect', Meteor.userId())
-          // cleanup new connection
-          Meteor.connection.setUserId(null)
-
-          maybeReconnect()
-        }
-
         data.hashedToken = 'unused' // prevent constructor error
         let accessToken = new LoginLinks.AccessToken(data)
 
@@ -57,11 +47,35 @@ _.extend(LoginLinks, {
       if (cb)
         cb(e, data)
     })
+  },
+
+
+  // -- private functions --
+
+  _cleanupNewConnection() {
+    if (existingHook)
+      existingHook()
+
+    // callLoginMethod overwrites Meteor.connection.onReconnect,
+    // but let's be defensive
+    let wasConnectionLoggedIn = Meteor.userId() &&
+          ! localStorage.getItem('Meteor.loginToken')
+    
+    if (wasConnectionLoggedIn) {
+      Meteor.connection.setUserId(null)
+    }
+
+    maybeRelogin()
+  },
+
+  _setupHook() {
+    existingHook = Meteor.connection.onReconnect
+    Meteor.connection.onReconnect = this._cleanupNewConnection
   }
 
 })
 
 if (! Meteor.userId())
-  maybeReconnect()
+  maybeRelogin()
 
-
+Meteor.startup(LoginLinks._setupHook)

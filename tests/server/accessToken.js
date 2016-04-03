@@ -33,6 +33,10 @@ Tinytest.add(
 Tinytest.addAsync(
   'login-links - old tokens are cleared',
   function (test, done) {
+    try {
+      Accounts.createUser({email: 'a@b', password: 'a'})
+    } catch(e) { }
+    
     let user = Meteor.users.findOne()
     LoginLinks.generateAccessToken(user._id, {expirationInSeconds: 0})
     Meteor.setTimeout(function() {
@@ -43,6 +47,7 @@ Tinytest.addAsync(
         test.equal(beforeCount, afterCount) // one added, one cleaned up
         done()
       }, 2000)
+
     }, 1000)
   }
 )
