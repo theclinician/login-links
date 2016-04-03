@@ -1,4 +1,4 @@
-let expireTokens = function() {
+LoginLinks._expireTokens = function() {
   Meteor.users.find({
     'services.accessTokens.tokens': {
       $exists: true,
@@ -6,9 +6,15 @@ let expireTokens = function() {
     }
   }).forEach(function(user) {
     for (let token of user.services.accessTokens.tokens) {
-      accessToken = new LoginLinks.AccessToken(rawToken)
+      accessToken = new LoginLinks.AccessToken(token)
       if (accessToken.isExpired) {
-        Meteor.users.update(user._id, {$pull: token})
+        Meteor.users.update(user._id, {
+          $pull: {
+            'services.accessTokens.tokens': {
+              hashedToken: token.hashedToken
+            }
+          }
+        })
       }
     }
   })
@@ -16,5 +22,5 @@ let expireTokens = function() {
   
 
 Meteor.setInterval(function() {
-  expireTokens()
+  LoginLinks._expireTokens()
 }, 60 * 60 * 1000) // 1 hour

@@ -1,5 +1,5 @@
 Tinytest.add(
-  'login-links: setDefaultExpirationInSeconds',
+  'login-links - setDefaultExpirationInSeconds',
   function (test) {
     let expiration = 10
     LoginLinks.setDefaultExpirationInSeconds(expiration)
@@ -9,7 +9,7 @@ Tinytest.add(
 )
 
 Tinytest.add(
-  'login-links: types work',
+  'login-links - types work',
   function (test) {
     let month = 30 * 24 * 60 * 60 
     LoginLinks.setTypes({
@@ -22,7 +22,7 @@ Tinytest.add(
 )
     
 Tinytest.add(
-  'login-links: token expiration works',
+  'login-links - token expiration works',
   function (test) {
     let month = 30 * 24 * 60 * 60 
     token = new LoginLinks.AccessToken({hashedToken: 'a', when: 1, expirationInSeconds: month})
@@ -30,3 +30,19 @@ Tinytest.add(
   }
 )
     
+Tinytest.addAsync(
+  'login-links - old tokens are cleared',
+  function (test, done) {
+    let user = Meteor.users.findOne()
+    LoginLinks.generateAccessToken(user._id, {expirationInSeconds: 0})
+    Meteor.setTimeout(function() {
+      LoginLinks._expireTokens()
+      Meteor.setTimeout(function(){
+        let beforeCount = user.services.accessTokens.tokens.length
+        let afterCount = Meteor.users.findOne(user._id).services.accessTokens.tokens.length
+        test.equal(beforeCount, afterCount) // one added, one cleaned up
+        done()
+      }, 2000)
+    }, 1000)
+  }
+)

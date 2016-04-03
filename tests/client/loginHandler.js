@@ -1,5 +1,5 @@
 Tinytest.addAsync(
-  'login-links: loginWithToken works',
+  'login-links - loginWithToken works',
   function (test, done) {
     createUserAndToken(function(targetId, token) {
       test.isNull(Meteor.userId())

@@ -1,5 +1,5 @@
 Tinytest.addAsync(
-  'login-links: throws not found error',
+  'login-links - throws not found error',
   function (test, done) {
     LoginLinks.connectionLogin('a', function (e, data) {
       test.equal(e.error, 'login-links/token-not-found')
@@ -10,7 +10,7 @@ Tinytest.addAsync(
 )
 
 Tinytest.addAsync(
-  'login-links: updates Accounts.loggingIn()',
+  'login-links - updates Accounts.loggingIn()',
   function (test, done) {
     test.isFalse(Accounts.loggingIn())
     LoginLinks.connectionLogin('a', function (e, data) {
@@ -22,7 +22,7 @@ Tinytest.addAsync(
 )
 
 Tinytest.addAsync(
-  "login-links: expired token doesn't work",
+  "login-links - expired token doesn't work",
   function (test, done) {
     createUserAndExpiringToken(function(targetId, token) {
       setTimeout(function() {
@@ -37,7 +37,7 @@ Tinytest.addAsync(
 )
 
 Tinytest.addAsync(
-  "login-links: expired token doesn't reconnect",
+  "login-links - expired token doesn't reconnect",
   function (test, done) {
     createUserAndExpiringToken(function(targetId, token) {
       LoginLinks.connectionLogin(token, function (e, data) {
@@ -66,7 +66,7 @@ Tinytest.addAsync(
 )
 
 Tinytest.addAsync(
-  'login-links: connectionLogin works',
+  'login-links - connectionLogin works',
   function (test, done) {
     createUserAndToken(function(targetId, token) {
       test.isNull(Meteor.userId())
