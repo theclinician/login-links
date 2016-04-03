@@ -23,6 +23,7 @@ https://my-blog-app.com/post/abc?comment=3?token=A10F51nigkFsShxmvkLnlQ76Kzjh7h9
   - [Hooks](#hooks)
     - [onTokenLogin](#ontokenlogin)
     - [onConnectionLogin](#ontokenlogin)
+    - [connectionLoginReconnect](#connectionloginreconnect)
 - [Related packages](#related-packages)
 - [Package dev](#package-dev)
   - [Testing](#testing)
