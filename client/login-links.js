@@ -9,6 +9,9 @@ let maybeReconnect = function () {
         LoginLinks.connectionLoginReconnect(token)
       else
         LoginLinks.connectionLogin(token)
+    } else {
+      localStorage.removeItem('login-links/connectionToken')
+      localStorage.removeItem('login-links/tokenExpiration')
     }
   }
 }
@@ -58,5 +61,7 @@ _.extend(LoginLinks, {
 
 })
 
-maybeReconnect()
+if (! Meteor.userId())
+  maybeReconnect()
+
 
