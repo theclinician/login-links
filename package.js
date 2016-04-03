@@ -1,6 +1,6 @@
 Package.describe({
   name: 'loren:login-links',
-  version: '0.1.0',
+  version: '0.1.1',
   summary: 'Send links that automatically login the user with OTPs (one-time passwords)',
   git: 'https://github.com/lorensr/login-links.git'
 });

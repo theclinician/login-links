@@ -70,7 +70,7 @@ _.extend(LoginLinks, {
 
   _setupHook() {
     existingHook = Meteor.connection.onReconnect
-    Meteor.connection.onReconnect = this._cleanupNewConnection
+    Meteor.connection.onReconnect = LoginLinks._cleanupNewConnection
   }
 
 })
