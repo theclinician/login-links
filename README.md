@@ -1,4 +1,4 @@
- Meteor package for sending links that automatically log in the user.
+Meteor package for sending links that automatically log in the user.
 
 The main use case is sending an email or sms to your user with a link to your app that contains an OTP (one-time password) that automatically logs them in (so they don't have to enter their username/password or do OAuth):
 
@@ -12,6 +12,7 @@ https://my-blog-app.com/post/abc?comment=3?token=A10F51nigkFsShxmvkLnlQ76Kzjh7h9
 - [Basic usage](#basic-usage)
   - [On server](#on-server)
   - [Then on client](#then-on-client)
+- [Security note](#security-note)
 - [API](#api)
   - [Expiration](#expiration)
     - [Global](#global)
@@ -65,6 +66,10 @@ if (!Meteor.userId()) {
 }   
 ```
 
+## Security note
+
+Normally the ability to gain access to a user account depends on the username/email and password (for your app, or for the oauth service). In the case of `accounts-password`, you can also gain access to a user account if you can access the user's email, because you can call `sendResetPasswordEmail` and [`resetPassword`](http://docs.meteor.com/#/full/accounts_resetpassword), which logs you in. While currently such emails [do not expire](https://github.com/meteor/meteor/issues/6462), it's best practice that they do (in order to reduce the risk that someone will gain access to your email later, and find the reset email and use it). Similarly, you should pick an expiration period for login links, according to the balance you choose between UX and security.
+
 ## API
 
 ### Expiration
@@ -79,7 +84,7 @@ You can configure expiration in three ways. A value of `0` is not supported.
 LoginLinks.setDefaultExpirationInSeconds(60 * 60); // one hour
 ```
 
-Call on both server and client
+Call on both server and client. The default value is one day. 
 
 #### Types
 
