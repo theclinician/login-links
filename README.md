@@ -49,7 +49,7 @@ Email.send({
 });
 ```
 
-You could also use the token for all of your emails to users, adding it as a query parameter that works on any route:
+You could also use the token for all of your emails to users, adding it as a query parameter that can be added to any route:
 
 `text: 'Josh Owens just commented on your post: https://myapp.com/anyroute?foo=bar&token=' + token`
 
@@ -57,7 +57,7 @@ You could also use the token for all of your emails to users, adding it as a que
 
 ```javascript
 if (!Meteor.userId()) {
-  token = get token from URL (depends on your router and link format)
+  token = # get token from URL (depends on your router and link format)
 
   LoginLinks.loginWithToken(token, function(e, r) {
     if (!e)
@@ -68,7 +68,7 @@ if (!Meteor.userId()) {
 
 ## Security note
 
-Normally the ability to gain access to a user account depends on the username/email and password (for your app, or for the oauth service). In the case of `accounts-password`, you can also gain access to a user account if you can access the user's email, because you can call `sendResetPasswordEmail` and [`resetPassword`](http://docs.meteor.com/#/full/accounts_resetpassword), which logs you in. While currently such emails [do not expire](https://github.com/meteor/meteor/issues/6462), it's best practice that they do (in order to reduce the risk that someone will gain access to your email later, and find the reset email and use it). Similarly, you should pick an expiration period for login links, according to the balance you choose between UX and security.
+Normally the ability to gain access to a user account depends on knowledge of the username/email and password (of your app or the oauth service). In the case of `accounts-password`, you can also gain access to a user account if you can access the user's email, because you can call `sendResetPasswordEmail` and [`resetPassword`](http://docs.meteor.com/#/full/accounts_resetpassword), which logs you in. While currently such emails [do not expire](https://github.com/meteor/meteor/issues/6462), it's best practice that they do (in order to reduce the risk that someone will gain access to your email later, and find the reset email and use it). Similarly, you should pick an expiration period for `login-links`, according to the balance you choose between UX and security.
 
 ## API
 
@@ -149,7 +149,7 @@ Meteor.connection.onReconnect = function() {
 
   // then your code
 };
-``
+```
 
 ### Hooks
 
