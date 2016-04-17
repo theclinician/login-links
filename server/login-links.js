@@ -5,6 +5,11 @@ Meteor.users._ensureIndex(
 
 _.extend(LoginLinks, {
 
+  /**
+   * Generate a token to send and later use for loginWithToken or connectionLogin
+   * @param {string|object} user
+   * @param {object} opts - `{type: String}` or `{expirationInSeconds: Integer}`. Any additional fields in `opts` will be copied to the stored token that is provided to any hooks.
+   */
   generateAccessToken(user, opts) {
     let stampedToken,
         hashStampedToken,
@@ -34,14 +39,28 @@ _.extend(LoginLinks, {
     return stampedToken.token
   }, // end generateAccessToken
 
+  /**
+   * @callback loginHook
+   * @param {string} token
+   * @param {object} user - only contains `_id` and `services.accessTokens.tokens`
+   */
+
   _tokenLoginHooks: [],
 
+  /**
+   * When loginWithToken is used to successfully login a user, this hook is called before completion.
+   * @param {loginHook} hook
+   */
   onTokenLogin(hook) {
     this._tokenLoginHooks.push(hook)
   },
 
   _connectionHooks: [],
 
+  /**
+   * When connectionLogin is used to successfully login a user, this hook is called before completion. If you return an object, the object's fields will be added to the `data` object that is passed to the client connectionLogin callback.
+   * @param {loginHook} hook
+   */
   onConnectionLogin(hook) {
     this._connectionHooks.push(hook)
   },
