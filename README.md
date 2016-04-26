@@ -174,7 +174,6 @@ On a `connectionLogin` reconnect attempt, by default it will call `connectionLog
 ## Related packages
 
 - [loren:roles-restricted](https://github.com/lorensr/roles-restricted) - If you want to restrict the permissions that the automatically-logged-in browser has, use this package along with [alanning:roles](https://github.com/alanning/meteor-roles).
-
 - [accounts-passwordless](https://github.com/acemtp/meteor-accounts-passwordless/)
   - full accounts system (creates new user accounts)
   - no timeout on tokens
@@ -182,9 +181,7 @@ On a `connectionLogin` reconnect attempt, by default it will call `connectionLog
   - only email-based
   - token generation is triggered client-side
   - no `connectionLogin` option
-
 - [pascoual:otp](https://github.com/pascoual/meteor-otp/) - This is for TOTP (Time-based OTP), like Google Authenticator, usually used as 2FA (two-factor auth).
-
 - [dburles:two-factor](http://meteorcapture.com/two-factor-authentication/) - Generates 2FA codes
 
 ## Package dev
@@ -202,6 +199,7 @@ open localhost:3000
 
 ## Credits
 
-Thanks to Share911 for sponsoring. [share911.com](https://share911.com/) - An emergency response system for your organization.
+Thanks to Share911 for sponsoring 👏
+[share911.com](https://share911.com/) – the best emergency response system for your organization.
 
 [Contributors](https://github.com/lorensr/roles-restricted/graphs/contributors)
