@@ -10,6 +10,7 @@ Meteor.methods({
   },
 
   generateToken(userId, opts) {
+    // l('generateToken', {userId, opts})
     return LoginLinks.generateAccessToken(userId, opts)
   }
 

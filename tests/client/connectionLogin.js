@@ -58,13 +58,34 @@ Tinytest.addAsync(
 
             Meteor.call('whoami', function(e, serverUserId) {
               test.equal(serverUserId, null)
-              
+
               done()
             })
           }
 
           Meteor.reconnect()
         }, 2000)
+      })
+    })
+  }
+)
+
+Tinytest.addAsync(
+  'login-links - connectionLogin logs out on logout',
+  function (test, done) {
+    createUserAndToken(function(targetId, token) {
+      LoginLinks.connectionLogin(token, function (e, {userId}) {
+        Meteor.logout(function (e) {
+          test.isUndefined(e)
+          test.isNull(Meteor.userId())
+          test.isNull(localStorage.getItem('login-links/connectionToken'))
+
+          Meteor.call('whoami', function(e, serverUserId) {
+            test.isNull(serverUserId)
+
+            done()
+          })
+        })
       })
     })
   }
@@ -80,7 +101,7 @@ Tinytest.addAsync(
         test.isUndefined(e)
         test.equal(userId, targetId)
         test.equal(Meteor.userId(), targetId)
-        
+
         // didn't create a resume token
         test.equal(localStorage.getItem('Meteor.loginToken'), null)
 
@@ -107,7 +128,7 @@ Tinytest.addAsync(
 
               Meteor.call('whoami', function(e, serverUserId) {
                 test.equal(serverUserId, targetId)
-                
+
                 done()
               })
             }, 1000)

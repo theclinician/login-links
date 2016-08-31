@@ -5,9 +5,10 @@ Tinytest.addAsync(
       test.isNull(Meteor.userId())
 
       LoginLinks.loginWithToken(token, function (e) {
+        // console.log('EEE', e)
         test.isUndefined(e)
         test.equal(Meteor.userId(), targetId)
-        
+
         // created a resume token
         test.equal(typeof localStorage.getItem('Meteor.loginToken'), 'string')
 
@@ -26,7 +27,7 @@ Tinytest.addAsync(
 
             Meteor.call('whoami', function(e, serverUserId) {
               test.equal(serverUserId, targetId)
-              
+
               done()
             })
           }
@@ -34,6 +35,22 @@ Tinytest.addAsync(
           Meteor.reconnect()
         })
       })
+    })
+  }
+)
+
+Tinytest.addAsync(
+  'login-links - per-token expiration works',
+  (test, done) => {
+    createUserAndExpiringToken(function(targetId, token) {
+      test.isNull(Meteor.userId())
+      setTimeout(() => {
+        LoginLinks.loginWithToken(token, function (e) {
+          test.equal(e.error, "login-links/token-expired")
+          test.isNull(Meteor.userId())
+          done()
+        })
+      }, 2000)
     })
   }
 )

@@ -9,15 +9,15 @@ class AccessToken {
 
   get typeConfig() {
     let config
-    
+
     if (this.type)
       config = LoginLinks._accessTokenTypes[this.type]
-    
+
     return config || {}
   }
 
   getExpirationInSeconds() {
-    // l('getExpirationInSeconds', this.type, LoginLinks._accessTokenTypes, this.typeConfig)
+    // console.log('getExpirationInSeconds', this.expirationInSeconds, this.type, LoginLinks._accessTokenTypes, this.typeConfig)
     return this.expirationInSeconds ||
       this.typeConfig.expirationInSeconds ||
       LoginLinks._defaultExpirationInSeconds

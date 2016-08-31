@@ -15,7 +15,7 @@ _.extend(LoginLinks, {
         hashStampedToken,
         update
 
-    check(user, Match.OneOf(String, Object))
+    check(user, Match.OneOf(String, Object), '`user` must be a string or basic object')
     check(opts, Match.Optional(Object))
 
     if ('string' === typeof user) {
@@ -35,6 +35,8 @@ _.extend(LoginLinks, {
         'services.accessTokens.tokens': hashStampedToken
       }
     })
+
+    console.log({hashStampedToken})
 
     return stampedToken.token
   }, // end generateAccessToken

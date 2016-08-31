@@ -1,3 +1,8 @@
+const clearLocalStorage = () => {
+  localStorage.removeItem('login-links/connectionToken')
+  localStorage.removeItem('login-links/tokenExpiration')
+}
+
 let maybeRelogin = function () {
   let tokenExpiration = localStorage.getItem('login-links/tokenExpiration')
   if (tokenExpiration) {
@@ -10,8 +15,7 @@ let maybeRelogin = function () {
       else
         LoginLinks.connectionLogin(token)
     } else {
-      localStorage.removeItem('login-links/connectionToken')
-      localStorage.removeItem('login-links/tokenExpiration')
+      clearLocalStorage()
     }
   }
 }
@@ -52,7 +56,7 @@ _.extend(LoginLinks, {
    */
   connectionLogin (token, cb) {
     Accounts._setLoggingIn(true)
-    
+
     Meteor.call('login-links/connectionLogin', token, function (e, data) {
       Accounts._setLoggingIn(false)
       if (!e) {
@@ -81,7 +85,7 @@ _.extend(LoginLinks, {
     // but let's be defensive
     let wasConnectionLoggedIn = Meteor.userId() &&
           ! localStorage.getItem('Meteor.loginToken')
-    
+
     if (wasConnectionLoggedIn) {
       Meteor.connection.setUserId(null)
     }
@@ -100,3 +104,7 @@ if (! Meteor.userId())
   maybeRelogin()
 
 Meteor.startup(LoginLinks._setupHook)
+
+Accounts.onLogout(() => {
+  clearLocalStorage()    
+})

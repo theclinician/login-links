@@ -1,11 +1,13 @@
 Meteor package for sending links that automatically log in the user.
 
-The main use case is sending an email or sms to your user with a link to your app that contains an OTP (one-time password) that automatically logs them in (so they don't have to enter their username/password or do OAuth):
+The main use case is sending an email or sms to your user with a link to your app that contains an OTP (one-time password)* that automatically logs them in (so they don't have to enter their username/password or do OAuth):
 
 ```
 Josh Owens just commented on your blog post:
 https://my-blog-app.com/post/abc?comment=3?token=A10F51nigkFsShxmvkLnlQ76Kzjh7h9pMuNxpVpO81a
 ```
+
+\* * Note that despite the name, in this package, OTPs can be used multiple times, up until their expiry.*
 
 ## Contents
 
@@ -41,7 +43,7 @@ https://my-blog-app.com/post/abc?comment=3?token=A10F51nigkFsShxmvkLnlQ76Kzjh7h9
 ### On server
 
 ```javascript
-token = LoginLinks.generateAccessToken(user);
+const token = LoginLinks.generateAccessToken(user);
 
 Email.send({
   text: 'Click this: https://myapp.com/autologin/' + token,
@@ -57,11 +59,15 @@ You could also use the token for all of your emails to users, adding it as a que
 
 ```javascript
 if (!Meteor.userId()) {
-  token = # get token from URL (depends on your router and link format)
+  token = // get token from URL (depends on your router and link format)
 
-  LoginLinks.loginWithToken(token, function(e, r) {
-    if (!e)
-      // logged in!
+  LoginLinks.loginWithToken(token, (e, r) => {
+    if (e) {
+      // notify
+      return;
+    }
+
+    // logged in!
   });
 }   
 ```
@@ -74,7 +80,7 @@ Normally the ability to gain access to a user account depends on knowledge of th
 
 ### Expiration
 
-When a login is attempted with a token that is expired, a `'login-links/token-expired'` error will be thrown. The default token expiration is one day. 
+When a login is attempted with a token that is expired, a `'login-links/token-expired'` error will be thrown. The default token expiration is one day.
 
 You can configure expiration in three ways. A value of `0` is not supported.
 
@@ -84,7 +90,7 @@ You can configure expiration in three ways. A value of `0` is not supported.
 LoginLinks.setDefaultExpirationInSeconds(60 * 60); // one hour
 ```
 
-Call on both server and client. The default value is one day. 
+Call on both server and client. The default value is one day.
 
 #### Types
 
@@ -110,8 +116,10 @@ LoginLinks.generateAccessToken(user, {expiresInSeconds: 10 * 60}); // ten minute
 
 `LoginLinks.generateAccessToken(user, opts)` (server)
 
-- `user`: `userId` or user object
+- `user`: `userId` or user object.
 - `opts`: `{type: String}` or `{expirationInSeconds: Integer}`
+
+*Note: If you pass a user object, it has to be a raw object, so if you're using `dburles:collection-helpers` on `Meteor.users`, you have to fetch it with `transform: null`: `Meteor.users.findOne({}, {transform: null})`*
 
 Any additional fields in `opts` will be copied to the stored token that is provided to any [hooks](#hooks).
 
@@ -144,7 +152,7 @@ The reconnect code uses `Meteor.connection.onReconnect`, so if you redefine it, 
 
 ```javascript
 existingHook = Meteor.connection.onReconnect
-Meteor.connection.onReconnect = function() {
+Meteor.connection.onReconnect = () => {
   existingHook()
 
   // then your code
@@ -157,7 +165,7 @@ Meteor.connection.onReconnect = function() {
 
 `LoginLinks.onTokenLogin(function(token, user){});` (server)
 
-When [loginWithToken](#loginwithtoken) is used to successfully login a user, this hook is called before completion. 
+When [loginWithToken](#loginwithtoken) is used to successfully login a user, this hook is called before completion.
 
 #### onConnectionLogin
 
@@ -181,8 +189,10 @@ On a `connectionLogin` reconnect attempt, by default it will call `connectionLog
   - only email-based
   - token generation is triggered client-side
   - no `connectionLogin` option
+- [dispatch:accounts-sms](https://github.com/DispatchMe/meteor-accounts-sms) SMS-code-only full accounts system
 - [pascoual:otp](https://github.com/pascoual/meteor-otp/) - This is for TOTP (Time-based OTP), like Google Authenticator, usually used as 2FA (two-factor auth).
 - [dburles:two-factor](http://meteorcapture.com/two-factor-authentication/) - Generates 2FA codes
+- [dispatch:login-token](https://github.com/DispatchMe/meteor-login-token) Basically this package without `connectionLogin`. Would have just added to it had I found it earlier 😜
 
 ## Package dev
 
@@ -193,7 +203,7 @@ ES6 without semicolons
 ```bash
 git clone git@github.com:lorensr/login-links.git
 cd login-links
-meteor test-packages ./
+meteor --release 1.3.3.1 test-packages ./
 open localhost:3000
 ```
 
