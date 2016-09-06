@@ -7,7 +7,7 @@ Josh Owens just commented on your blog post:
 https://my-blog-app.com/post/abc?comment=3?token=A10F51nigkFsShxmvkLnlQ76Kzjh7h9pMuNxpVpO81a
 ```
 
-\* * Note that despite the name, in this package, OTPs can be used multiple times, up until their expiry.*
+\* *Note that despite the name, in this package, OTPs can be used multiple times, up until their expiry.*
 
 ## Contents
 
