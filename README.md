@@ -1,7 +1,8 @@
 Meteor package for sending links that automatically log in the user.
 
 You can add this to your app typing in the command line:
-`loren:login-links`
+
+`meteor add loren:login-links`
 
 The main use case is sending an email or sms to your user with a link to your app that contains an OTP (one-time password)* that automatically logs them in (so they don't have to enter their username/password or do OAuth):
 
