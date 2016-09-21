@@ -36,7 +36,7 @@ _.extend(LoginLinks, {
       }
     })
 
-    console.log({hashStampedToken})
+    //console.log({hashStampedToken})
 
     return stampedToken.token
   }, // end generateAccessToken
