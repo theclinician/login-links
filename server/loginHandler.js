@@ -1,8 +1,11 @@
 Accounts.registerLoginHandler(function (loginRequest) {
   let token = loginRequest['login-links/accessToken']
 
-  if (!token || LoginLinks._config.disableRegularLogin === true)
+  if (!token)
     return undefined // don't handle
+
+  if(LoginLinks._config.disableRegularLogin === true)
+    return null // not allowed to use this login method
 
   let {user, savedToken} = LoginLinks._lookupToken(token)
 
