@@ -6,8 +6,9 @@ Accounts.registerLoginHandler(function (loginRequest) {
 
   let {user, savedToken} = LoginLinks._lookupToken(token)
 
+  const additionalAuth = loginRequest['login-links/additionalAuth']
   for (let hook of LoginLinks._tokenLoginHooks)
-    hook(savedToken, user)
+    hook(savedToken, user, additionalAuth)
 
   return {userId: user._id}
 })

@@ -35,8 +35,10 @@ _.extend(LoginLinks, {
    * @param {loginCB} cb
    */
   loginWithToken (accessToken, cb) {
-    let loginRequest = {'login-links/accessToken': accessToken}
 
+    const additionalAuth = LoginLinks._additionalAuthAccessor()
+
+    let loginRequest = {'login-links/accessToken': accessToken, 'login-links/additionalAuth' : additionalAuth}
     Accounts.callLoginMethod({
       methodArguments: [loginRequest],
       userCallback: cb
@@ -56,8 +58,9 @@ _.extend(LoginLinks, {
    */
   connectionLogin (token, cb) {
     Accounts._setLoggingIn(true)
+    const additionalAuth = LoginLinks._additionalAuthAccessor()
 
-    Meteor.call('login-links/connectionLogin', token, function (e, data) {
+    Meteor.call('login-links/connectionLogin', token, additionalAuth, function (e, data) {
       Accounts._setLoggingIn(false)
       if (!e) {
         Meteor.connection.setUserId(data.userId)

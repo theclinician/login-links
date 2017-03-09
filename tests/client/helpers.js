@@ -24,3 +24,14 @@ createUserAndToken = function(cb) {
 createUserAndExpiringToken = function(cb) {
   _createUserAndToken({expirationInSeconds: 1}, cb)
 }
+
+setAdditionalAuthAccessor = function(authActual, authAttempted){
+  Meteor.call('setAdditionalAuthCheck', authActual)
+  LoginLinks.setAdditionalAuthAccessor(function () {
+    return authAttempted
+  })
+}
+
+resetLoginLinks = function(){
+  Meteor.call('resetLoginLinks');
+}

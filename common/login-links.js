@@ -10,7 +10,15 @@ LoginLinks = {
 
   setTypes(types) {
     this._accessTokenTypes = types
+  },
+
+  _additionalAuthAccessor: function(){ return null },
+
+  setAdditionalAuthAccessor(additionalAuthAccessor){
+    check(additionalAuthAccessor, Function)
+    this._additionalAuthAccessor = additionalAuthAccessor
   }
+
 
 }
 
