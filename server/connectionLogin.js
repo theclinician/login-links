@@ -1,6 +1,9 @@
 Meteor.methods({
 
   'login-links/connectionLogin': function (token) {
+    if(LoginLinks._config.disableConnectionLogin === true){
+      throw new Meteor.Error('login-links/connection-login-disabled')
+
     let {user, savedToken} = LoginLinks._lookupToken(token)
     l('connectionLogin user:', user._id)
 

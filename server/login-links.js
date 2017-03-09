@@ -5,6 +5,12 @@ Meteor.users._ensureIndex(
 
 _.extend(LoginLinks, {
 
+  _config: {},
+
+  config(config){
+    this._config = _.extend({}, config)
+  },
+
   /**
    * Generate a token to send and later use for loginWithToken or connectionLogin
    * @param {string|object} user
