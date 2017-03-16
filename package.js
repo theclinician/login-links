@@ -1,8 +1,8 @@
 Package.describe({
-  name: 'loren:login-links',
+  name: 'theclinician:login-links',
   version: '0.1.3',
   summary: 'Send links that automatically login the user with OTPs (one-time passwords)',
-  git: 'https://github.com/lorensr/login-links.git'
+  git: 'https://github.com/theclinician/login-links.git'
 });
 
 Package.onUse(function(api) {
