@@ -1,6 +1,7 @@
 const clearLocalStorage = () => {
   localStorage.removeItem('login-links/connectionToken')
   localStorage.removeItem('login-links/tokenExpiration')
+  localStorage.removeItem('login-links/additionalAuth')
 }
 
 let maybeRelogin = function () {
