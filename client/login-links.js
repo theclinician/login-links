@@ -67,8 +67,8 @@ _.extend(LoginLinks, {
         data.hashedToken = 'unused' // prevent constructor error
         let accessToken = new LoginLinks.AccessToken(data)
 
-        localStorage.setItem('login-links/additionalAuth', token)
         localStorage.setItem('login-links/connectionToken', token)
+        localStorage.setItem('login-links/additionalAuth', additionalAuth)
         localStorage.setItem('login-links/tokenExpiration', new Date(accessToken.expiresAt))
       }
 
